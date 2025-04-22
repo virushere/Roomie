@@ -50,6 +50,60 @@
         .filter-toggle {
             cursor: pointer;
         }
+        /* Lazy loading styles */
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #0d6efd;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 8px;
+        }
+        .skeleton-card {
+            height: 350px;
+            margin-bottom: 20px;
+        }
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .results-info {
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #0d6efd;
+            color: white;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -98,6 +152,11 @@
 
     <div class="container mt-4">
         <h1 class="mb-4">Find Your Perfect Apartment</h1>
+
+        <!-- Results info -->
+        <div class="results-info mb-3">
+            Showing <span id="showing-count">${rooms.size()}</span> of <span id="total-count">${totalCount}</span> apartment listings
+        </div>
 
         <div class="row">
             <!-- Filter Sidebar -->
@@ -304,6 +363,10 @@
                             </div>
                         </div>
 
+                        <!-- Hidden pagination field -->
+                        <input type="hidden" name="page" id="page-input" value="0">
+                        <input type="hidden" name="size" id="size-input" value="${pageSize != null ? pageSize : 6}">
+
                         <!-- Filter Buttons -->
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary">Apply Filters</button>
@@ -317,7 +380,7 @@
             <div class="col-md-9">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <c:if test="${not empty rooms}">
-                        <p class="mb-0 text-muted">Found ${fn:length(rooms)} listings</p>
+                        <p class="mb-0 text-muted">Found ${totalCount} listings</p>
                     </c:if>
                     <div class="dropdown">
                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -332,14 +395,13 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" id="apartments-container">
                     <c:if test="${not empty rooms}">
                         <c:forEach items="${rooms}" var="room">
                             <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="card room-card h-100">
                                     <!-- Room Image -->
                                     <c:choose>
-                                        <%-- Updated: Use hasImage() instead of hasRoomImage() --%>
                                         <c:when test="${room.hasImage()}">
                                             <img src="data:${room.imageType};base64,${room.base64Image}"
                                                  class="room-image" alt="Room Picture">
@@ -459,6 +521,27 @@
                         </div>
                     </c:if>
                 </div>
+
+                <!-- Loading indicator -->
+                <div class="loading-indicator" id="loading-indicator">
+                    <div class="loading-spinner"></div>
+                    <p class="mt-2">Loading more apartments...</p>
+                </div>
+
+                <!-- Skeleton loading templates (hidden initially) -->
+                <div class="row d-none" id="skeleton-templates">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card skeleton skeleton-card"></div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card skeleton skeleton-card"></div>
+                    </div>
+                </div>
+
+                <!-- Scroll to top button -->
+                <div class="scroll-top-btn" id="scroll-top-btn">
+                    <i class="bi bi-arrow-up"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -466,10 +549,50 @@
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Toggle filter sections
         document.addEventListener('DOMContentLoaded', function() {
-            const filterToggles = document.querySelectorAll('.filter-toggle');
+            // Constants
+            const PAGE_SIZE = ${pageSize != null ? pageSize : 6};
 
+            // DOM Elements
+            const apartmentsContainer = document.getElementById('apartments-container');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const skeletonTemplates = document.getElementById('skeleton-templates');
+            const showingCountEl = document.getElementById('showing-count');
+            const totalCountEl = document.getElementById('total-count');
+            const scrollTopBtn = document.getElementById('scroll-top-btn');
+
+            // State variables
+            let currentPage = ${currentPage != null ? currentPage : 0};
+            let isLoading = false;
+            let hasMore = ${hasMore != null ? hasMore : (totalCount > rooms.size())};
+
+            // Initialize scroll listener for lazy loading
+            window.addEventListener('scroll', function() {
+                // Check if we should load more
+                if (isNearBottom() && hasMore && !isLoading) {
+                    loadMoreApartments();
+                }
+
+                // Show/hide scroll to top button
+                if (window.scrollY > 500) {
+                    scrollTopBtn.style.display = 'flex';
+                } else {
+                    scrollTopBtn.style.display = 'none';
+                }
+            });
+
+            // Scroll to top button click handler
+            if (scrollTopBtn) {
+                scrollTopBtn.addEventListener('click', function() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+
+            // Toggle filter sections
+            const filterToggles = document.querySelectorAll('.filter-toggle');
             filterToggles.forEach(toggle => {
                 toggle.addEventListener('click', function() {
                     const icon = this.querySelector('i');
@@ -483,40 +606,243 @@
                 });
             });
 
-            // Form elements
-            const filterForm = document.getElementById('filterForm');
-
             // Clear empty form fields on submit to keep URL clean
-            filterForm.addEventListener('submit', function(event) {
-                const formElements = Array.from(filterForm.elements);
+            const filterForm = document.getElementById('filterForm');
+            if (filterForm) {
+                filterForm.addEventListener('submit', function(event) {
+                    const formElements = Array.from(filterForm.elements);
 
-                formElements.forEach(element => {
-                    if (element.type !== 'submit' && element.type !== 'button') {
-                        if (!element.value || element.value.trim() === '') {
-                            element.disabled = true;
+                    formElements.forEach(element => {
+                        if (element.type !== 'submit' && element.type !== 'button') {
+                            if (!element.value || element.value.trim() === '') {
+                                element.disabled = true;
+                            }
                         }
+                    });
+
+                    // Re-enable all form elements after form submission
+                    setTimeout(() => {
+                        formElements.forEach(element => {
+                            element.disabled = false;
+                        });
+                    }, 100);
+                });
+            }
+
+            // Check if user has scrolled near the bottom of the page
+            function isNearBottom() {
+                return (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 500);
+            }
+
+            // Apply sorting function
+            window.applySorting = function(sortOption) {
+                // Get current URL and parameters
+                const url = new URL(window.location.href);
+                const params = new URLSearchParams(url.search);
+                // Update or add the sortBy parameter
+                params.set('sortBy', sortOption);
+                // Redirect to the new URL with the sort parameter
+                window.location.href = `${url.pathname}?${params.toString()}`;
+            };
+
+            // Load more apartments function
+            function loadMoreApartments() {
+                if (isLoading || !hasMore) return;
+
+                // Set loading state
+                isLoading = true;
+                loadingIndicator.style.display = 'block';
+
+                // Show skeleton loaders
+                showSkeletonLoaders();
+
+                // Increment page
+                currentPage++;
+
+                // Get the current URL parameters
+                const url = new URL(window.location.href);
+                const queryParams = new URLSearchParams(url.search);
+
+                // Update the page parameter
+                queryParams.set('page', currentPage);
+
+                // Make sure the size parameter is set
+                if (!queryParams.has('size')) {
+                    queryParams.set('size', PAGE_SIZE);
+                }
+
+                // Fetch more apartments
+                fetch('${pageContext.request.contextPath}/home/apartment-listings/load-more?' + queryParams.toString())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Hide skeleton loaders
+                        hideSkeletonLoaders();
+
+                        // Process response
+                        if (data.rooms && data.rooms.length > 0) {
+                            // Append new apartments
+                            appendApartments(data.rooms);
+
+                            // Update counters
+                            const currentCount = parseInt(showingCountEl.textContent) + data.rooms.length;
+                            showingCountEl.textContent = currentCount;
+
+                            // Update state
+                            hasMore = data.hasMore;
+                        } else {
+                            // No more results
+                            hasMore = false;
+                            const noMoreResults = document.createElement('div');
+                            noMoreResults.className = 'col-12 text-center mt-3 mb-4';
+                            noMoreResults.innerHTML = '<p class="text-muted">No more apartments to display</p>';
+                            apartmentsContainer.appendChild(noMoreResults);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading more apartments:', error);
+                        // Show error message
+                        const errorMessage = document.createElement('div');
+                        errorMessage.className = 'alert alert-danger mt-3';
+                        errorMessage.textContent = 'Failed to load more apartments. Please try again.';
+                        apartmentsContainer.appendChild(errorMessage);
+                    })
+                    .finally(() => {
+                        // Reset loading state
+                        isLoading = false;
+                        loadingIndicator.style.display = 'none';
+                    });
+            }
+
+            // Show skeleton loaders
+            function showSkeletonLoaders() {
+                const template = skeletonTemplates.innerHTML;
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = template;
+
+                // Remove d-none class from skeleton cards
+                const skeletonCards = tempContainer.querySelectorAll('.col-md-6.col-lg-4');
+                skeletonCards.forEach(card => {
+                    card.classList.remove('d-none');
+                    apartmentsContainer.appendChild(card);
+                });
+            }
+
+            // Hide skeleton loaders
+            function hideSkeletonLoaders() {
+                const skeletons = document.querySelectorAll('.skeleton-card');
+                skeletons.forEach(skeleton => {
+                    const parentCol = skeleton.closest('.col-md-6.col-lg-4');
+                    if (parentCol) {
+                        parentCol.remove();
                     }
                 });
+            }
 
-                // Re-enable all form elements after form submission
-                setTimeout(() => {
-                    formElements.forEach(element => {
-                        element.disabled = false;
-                    });
-                }, 100);
-            });
+            // Append apartments to container
+            function appendApartments(rooms) {
+                rooms.forEach(room => {
+                    const roomHTML = createApartmentCard(room);
+                    apartmentsContainer.insertAdjacentHTML('beforeend', roomHTML);
+                });
+            }
+
+            // Create HTML for apartment card
+            function createApartmentCard(room) {
+                // Build profile image
+                let roomImage = '${pageContext.request.contextPath}/img/default-apartment.jpg';
+                if (room.hasImage) {
+                    roomImage = 'data:' + room.imageType + ';base64,' + room.base64Image;
+                }
+
+                // Handle optional fields
+                const squareFeetHtml = room.squareFeet ?
+                    '<span class="badge bg-secondary">' +
+                    '    <i class="bi bi-rulers"></i> ' + room.squareFeet + ' sq ft' +
+                    '</span>' : '';
+
+                const bathsHtml = room.numBaths ?
+                    '<span class="badge bg-secondary me-1">' +
+                    '    <i class="bi bi-droplet"></i> ' + room.numBaths + ' bath' + (room.numBaths > 1 ? 's' : '') +
+                    '</span>' : '';
+
+                // Format description
+                let description = '';
+                if (room.description) {
+                    if (room.description.length > 100) {
+                        description = '<p class="card-text">' + room.description.substring(0, 97) + '...</p>';
+                    } else {
+                        description = '<p class="card-text">' + room.description + '</p>';
+                    }
+                }
+
+                // Build location
+                let location = '';
+                if (room.address) location += room.address + ', ';
+                if (room.city) location += room.city + ', ';
+                if (room.state) location += room.state + ' ';
+                if (room.zipCode) location += room.zipCode;
+
+                // Build amenities
+                let featuresHtml = '';
+                if (room.isFurnished) {
+                    featuresHtml += '<span class="badge bg-info feature-badge"><i class="bi bi-box-seam"></i> Furnished</span>';
+                }
+                if (room.hasParking) {
+                    featuresHtml += '<span class="badge bg-info feature-badge"><i class="bi bi-p-square"></i> Parking</span>';
+                }
+                if (room.hasLaundry) {
+                    featuresHtml += '<span class="badge bg-info feature-badge"><i class="bi bi-wind"></i> Laundry</span>';
+                }
+                if (room.petsAllowed) {
+                    featuresHtml += '<span class="badge bg-info feature-badge"><i class="bi bi-piggy-bank"></i> Pets allowed</span>';
+                }
+                if (room.subletAvailable) {
+                    featuresHtml += '<span class="badge bg-info feature-badge"><i class="bi bi-people"></i> Sublet avail.</span>';
+                }
+
+                // Build the full HTML for the card
+                return '<div class="col-md-6 col-lg-4 mb-4">' +
+                    '<div class="card room-card h-100">' +
+                    '<img src="' + roomImage + '" class="room-image" alt="Apartment Image">' +
+                    '<div class="card-body">' +
+                    '<div class="d-flex justify-content-between">' +
+                    '<h5 class="card-title">' + (room.numBeds ? room.numBeds : '1') + ' Bed Apartment</h5>' +
+                    '<h6 class="card-subtitle text-success">' + room.rent + '/mo</h6>' +
+                    '</div>' +
+                    '<p class="card-text text-muted mb-2">' +
+                    '<i class="bi bi-geo-alt"></i> ' + location +
+                    '</p>' +
+                    '<p class="card-text mb-2">' +
+                    '<span class="badge bg-secondary me-1">' +
+                    '<i class="bi bi-door-open"></i> ' + room.numBeds + ' bed' + (room.numBeds > 1 ? 's' : '') +
+                    '</span>' +
+                    bathsHtml +
+                    squareFeetHtml +
+                    '</p>' +
+                    '<p class="card-text text-muted small">' +
+                    '<i class="bi bi-calendar"></i> Available: ' +
+                    (room.availableFrom ? room.availableFrom : '') +
+                    '</p>' +
+                    description +
+                    '<div class="mt-3">' +
+                    '<div class="d-flex flex-wrap">' +
+                    featuresHtml +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="card-footer">' +
+                    '<a href="${pageContext.request.contextPath}/apartments/details/' + room.id + '"' +
+                    ' class="btn btn-outline-primary btn-sm w-100">View Details</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            }
         });
-
-        // Apply sorting
-        function applySorting(sortOption) {
-            // Get current URL and parameters
-            const url = new URL(window.location.href);
-            const params = new URLSearchParams(url.search);
-            // Update or add the sortBy parameter
-            params.set('sortBy', sortOption);
-            // Redirect to the new URL with the sort parameter
-            window.location.href = `${url.pathname}?${params.toString()}`;
-        }
     </script>
 </body>
 </html>

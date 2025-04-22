@@ -1,85 +1,3 @@
-//    package com.roomatefinder.demo.models;
-//
-//    import jakarta.persistence.*;
-//    import lombok.*;
-//
-//    import java.util.Set;
-//
-//    @Data
-//    @Entity
-//    @Table(name = "user_preferences")
-//    @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-//    public class UserPreferences {
-//
-//        // Enum classes
-//        public enum Gender { MALE, FEMALE, OTHER }
-//        public enum FoodPreference {
-//            VEGAN, VEGETARIAN, NON_VEGETARIAN, JAIN // UPPERCASE to match database ENUM
-//        }
-//
-//        public enum AlcoholPreference {
-//            YES, NO, OCCASIONALLY // UPPERCASE to match database ENUM
-//        }
-//        public enum PreferredArea { JAMAICA_PLAIN, FENWAY, KENMORE, HUNTINGTON_AVENUE }
-//        public enum LeaseOption { SHORT_TERM, LONG_TERM }
-//
-//        public enum Languages{English, Spanish, French, German, Chinese}
-//
-//        @Id
-//        @GeneratedValue(strategy = GenerationType.IDENTITY)
-//        private Long id;
-//
-//        @Column(name = "user_id")
-//        private String userId;
-//
-//        @Enumerated(EnumType.STRING)
-//        @Column(name = "gender", columnDefinition = "enum('MALE','FEMALE','OTHER')")
-//        private Gender gender;
-//
-//        @Enumerated(EnumType.STRING) // Critical for enum mapping
-//        @Column(name = "food_pref")
-//        private FoodPreference foodPref;
-//
-//        @Enumerated(EnumType.STRING)
-//        @Column(name = "alcohol_pref")
-//        private AlcoholPreference alcoholPref;
-//
-//        private Boolean smoking;
-//
-//        @Column(name = "cleanliness_rating")
-//        private Integer cleanlinessRating;
-//
-//        @Column(name = "sleep_schedule")
-//        private String sleepSchedule;
-//
-//        @Column(name = "year_of_intake")
-//        private Integer yearOfIntake;
-//
-//        @ElementCollection
-//        @CollectionTable(name = "preferred_areas", joinColumns = @JoinColumn(name = "preference_id"))
-//        @Column(name = "preferred_area")
-//        @Enumerated(EnumType.STRING)
-//        private Set<PreferredArea> preferredAreas;
-//
-//        @Enumerated(EnumType.STRING)
-//        @Column(name = "lease_option")
-//        private LeaseOption leaseOption;
-//
-//        @ElementCollection
-//        @CollectionTable(name = "languages_known", joinColumns = @JoinColumn(name = "preference_id"))
-//        @Column(name = "language") // Match the actual column name in the database
-//        private Set<String> languagesKnown;
-//
-//        @Column(name = "max_roommates")
-//        private Integer maxRoommates;
-//
-//        @Override
-//        public String toString() {
-//            return "UserPreferences(id=" + id + ", userId=" + userId + ")";
-//        }
-//    }
-//
-//
 package com.roomatefinder.demo.models;
 
 import com.roomatefinder.demo.Helper.UppercaseEnumConverter;
@@ -101,7 +19,6 @@ import java.util.Set;
 @Builder
 public class UserPreferences {
 
-    // Enum definitions matching the DB schema values
 
     public enum Gender {
         MALE, FEMALE, OTHER
@@ -123,12 +40,9 @@ public class UserPreferences {
         SHORT_TERM, LONG_TERM
     }
 
-    // Languages – note that your database values must match these constants (i.e. ENGLISH, SPANISH, FRENCH, GERMAN, CHINESE, HINDI, MARATHI, GUJARATI, TAMIL)
     public enum Languages {
         ENGLISH, SPANISH, FRENCH, GERMAN, CHINESE, HINDI, MARATHI, GUJARATI, TAMIL
     }
-
-    // New Enums for additional fields
 
     public enum Occupation {
         STUDENT, WORKING_PROFESSIONAL, OTHER
@@ -183,6 +97,9 @@ public class UserPreferences {
     @Column(name = "alcohol_pref", columnDefinition = "enum('YES','NO','OCCASIONALLY')")
     private AlcoholPreference alcoholPref;
 
+    @Transient  // This field doesn't persist in this table but gets transferred to the user entity
+    private Byte age;
+
     // Smoking: using Boolean so that null is allowed
     private Boolean smoking;
 
@@ -201,8 +118,6 @@ public class UserPreferences {
 
     @Column(name = "max_roommates")
     private Integer maxRoommates;
-
-    // New fields for additional filtering:
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @PastOrPresent(message = "Date of Birth must not be in the future")
@@ -269,7 +184,6 @@ public class UserPreferences {
     @Column(name = "language")
     @Convert(converter = UppercaseEnumConverter.class)
     private Set<Languages> languagesKnown;
-
 
     @Override
     public String toString() {

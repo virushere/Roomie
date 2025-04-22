@@ -87,8 +87,21 @@
                         <!-- Date of Birth -->
                         <div class="mb-3">
                             <label class="form-label">Date of Birth</label>
-                            <form:input path="dateOfBirth" type="date" class="form-control" max="${currentDate}"/>
-                            <div class="form-text">Please enter a valid date. Future dates are not allowed.</div>
+                            <form:input path="dateOfBirth"
+                                        id="dob"
+                                        type="date"
+                                        class="form-control"
+                                        max="${currentDate}"/>
+                            <div class="form-text">Future dates are not allowed.</div>
+                        </div>
+
+                        <!-- hidden age field (will post back) -->
+                        <input type="hidden" id="age" name="age"/>
+
+                        <!-- optional: display age -->
+                        <div class="mb-3">
+                            <label class="form-label">Your Age</label>
+                            <input type="text" id="ageDisplay" class="form-control" readonly/>
                         </div>
                         <!-- Food Preference -->
                         <div class="mb-3">
@@ -130,7 +143,7 @@
                         <!-- Year of Intake -->
                         <div class="mb-3">
                             <label class="form-label">Year of Intake</label>
-                            <form:input path="yearOfIntake" type="number" min="${currentYear}" max="${currentYear + 10}" class="form-control"/>
+                            <form:input path="yearOfIntake" type="number" class="form-control"/>
                         </div>
                         <!-- Occupation -->
                         <div class="mb-3">
@@ -283,6 +296,22 @@
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script>
+          (function(){
+            const dob       = document.getElementById('dob');
+            const ageHidden = document.getElementById('age');
+            const ageView   = document.getElementById('ageDisplay');
+            function computeAge(){
+              if(!dob.value) return;
+              const b   = new Date(dob.value);
+              const diff= Date.now() - b.getTime();
+              const yrs = Math.abs(new Date(diff).getUTCFullYear() - 1970);
+              ageHidden.value = yrs;
+              ageView.value   = yrs;
+            }
+            dob.addEventListener('change', computeAge);
+            window.addEventListener('DOMContentLoaded', computeAge);
+          })();
+        </script>
 </body>
 </html>

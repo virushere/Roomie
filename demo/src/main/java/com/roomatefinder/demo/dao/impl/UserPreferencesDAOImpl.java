@@ -27,7 +27,7 @@ public class UserPreferencesDAOImpl implements UserPreferencesDAO {
 
     @Override
     public UserPreferences save(UserPreferences preferences) {
-        getCurrentSession().saveOrUpdate(preferences);
+        getCurrentSession().saveOrUpdate(preferences); // merge
         return preferences;
     }
 

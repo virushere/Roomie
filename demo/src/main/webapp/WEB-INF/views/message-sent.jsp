@@ -104,9 +104,7 @@
             <div class="col-md-6">
                 <h2>Messages</h2>
             </div>
-            <div class="col-md-6 text-end">
-                <a href="/messages/compose" class="btn btn-primary">New Message</a>
-            </div>
+            <!-- Removed "New Message" button -->
         </div>
 
         <div class="row">
@@ -199,7 +197,7 @@
                                     <i class="bi bi-envelope-paper-fill fs-1 text-muted mb-3"></i>
                                     <h5>No sent messages</h5>
                                     <p class="text-muted">You haven't sent any messages yet.</p>
-                                    <a href="/messages/compose" class="btn btn-primary mt-3">Compose New Message</a>
+                                    <!-- Removed "Compose New Message" button -->
                                 </div>
                             </c:otherwise>
                         </c:choose>

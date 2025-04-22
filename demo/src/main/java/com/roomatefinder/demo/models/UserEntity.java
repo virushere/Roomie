@@ -5,6 +5,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Base64;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.type.descriptor.jdbc.TinyIntJdbcType;
 
 import java.time.LocalDateTime;
 
@@ -73,6 +74,9 @@ public class UserEntity {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "age", columnDefinition = "TINYINT")
+    private Byte age;
 
     // Check if user has a profile image
     public boolean hasProfileImage() {

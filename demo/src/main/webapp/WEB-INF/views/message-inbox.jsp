@@ -108,9 +108,6 @@
             <div class="col-md-6">
                 <h2>Messages</h2>
             </div>
-            <div class="col-md-6 text-end">
-                <a href="/messages/compose" class="btn btn-primary">New Message</a>
-            </div>
         </div>
 
         <div class="row">
@@ -182,7 +179,6 @@
                                                     </td>
                                                     <td class="align-middle">
                                                         <a href="/messages/view/${message.id}" class="btn btn-sm btn-primary">View</a>
-                                                        <a href="/messages/compose?recipient=${message.sender.id}&reply=${message.id}" class="btn btn-sm btn-outline-primary">Reply</a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -195,7 +191,6 @@
                                     <i class="bi bi-envelope-fill fs-1 text-muted mb-3"></i>
                                     <h5>No messages in your inbox</h5>
                                     <p class="text-muted">When you receive messages, they will appear here.</p>
-                                    <a href="/messages/compose" class="btn btn-primary mt-3">Compose New Message</a>
                                 </div>
                             </c:otherwise>
                         </c:choose>
