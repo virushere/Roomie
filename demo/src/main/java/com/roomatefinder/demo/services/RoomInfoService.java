@@ -1,89 +1,3 @@
-//package com.roomatefinder.demo.services;
-//
-//import com.roomatefinder.demo.dao.RoomInfoDAO;
-//import com.roomatefinder.demo.models.RoomInfo;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.time.LocalDate;
-//import java.util.List;
-//import java.util.Optional;
-//import java.util.stream.Collectors;
-//
-//@Service
-//@Transactional
-//public class RoomInfoService {
-//
-//    private final RoomInfoDAO roomInfoDAO;
-//
-//    @Autowired
-//    public RoomInfoService(RoomInfoDAO roomInfoDAO) {
-//        this.roomInfoDAO = roomInfoDAO;
-//    }
-//
-//    public RoomInfo createRoom(RoomInfo roomInfo) {
-//        return roomInfoDAO.save(roomInfo);
-//    }
-//
-//    public RoomInfo updateRoom(RoomInfo roomInfo) {
-//        if (roomInfo.getId() == null) {
-//            throw new RuntimeException("Cannot update non-existent room");
-//        }
-//        return roomInfoDAO.save(roomInfo);
-//    }
-//
-//    public RoomInfo saveRoom(RoomInfo roomInfo) {
-//        return roomInfoDAO.save(roomInfo);
-//    }
-//
-//    public RoomInfo getRoomById(Long id) {
-//        return roomInfoDAO.findById(id).orElse(null);
-//    }
-//
-//    public Optional<RoomInfo> findRoomById(Long id) {
-//        return roomInfoDAO.findById(id);
-//    }
-//
-//    public List<RoomInfo> getRoomsByUserId(String userId) {
-//        return roomInfoDAO.findByUserId(userId);
-//    }
-//
-//    public List<RoomInfo> findAvailableRooms() {
-//        List<RoomInfo> roomsWithCapacity = roomInfoDAO.findRoomsWithAvailableCapacity();
-//        LocalDate threeMonthsFromNow = LocalDate.now().plusMonths(3);
-//
-//        return roomsWithCapacity.stream()
-//                .filter(room -> room.getAvailableFrom().isBefore(threeMonthsFromNow))
-//                .collect(Collectors.toList());
-//    }
-//
-//    public List<RoomInfo> findAvailableRoomsByCriteria(
-//            Integer minBeds,
-//            Integer maxRent,
-//            Boolean subletAvailable,
-//            String transportOptions
-//    ) {
-//        return findAvailableRooms().stream()
-//                .filter(room ->
-//                        (minBeds == null || room.getNumBeds() >= minBeds) &&
-//                                (maxRent == null || room.getRent() <= maxRent) &&
-//                                (subletAvailable == null ||
-//                                        Boolean.TRUE.equals(room.getSubletAvailable()) == subletAvailable) &&
-//                                (transportOptions == null ||
-//                                        room.getTransportOptions().toLowerCase().contains(transportOptions.toLowerCase()))
-//                )
-//                .collect(Collectors.toList());
-//    }
-//
-//    public void deleteRoom(Long id) {
-//        roomInfoDAO.deleteById(id);
-//    }
-//
-//    public List<RoomInfo> getAllRooms() {
-//        return roomInfoDAO.findAll();
-//    }
-//}
 package com.roomatefinder.demo.services;
 
 import com.roomatefinder.demo.dao.RoomInfoDAO;
@@ -95,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -127,7 +40,7 @@ public class RoomInfoService {
     // Get a room by ID
     public RoomInfo getRoomById(Long id) {
         return roomInfoDao.findById(id)
-                .orElse(null); // Changed from orElseThrow to orElse(null) to match your error handling approach
+                .orElse(null);
     }
 
     // Update a room
@@ -341,7 +254,7 @@ public class RoomInfoService {
         } catch (Exception e) {
             // Log exception
             System.err.println("Error in findRoomsByAdvancedFilter: " + e.getMessage());
-            e.printStackTrace();
+            // e.printStackTrace();
             // Return empty list rather than propagating the exception
             return List.of();
         }

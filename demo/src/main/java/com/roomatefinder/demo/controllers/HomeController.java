@@ -706,54 +706,8 @@ public class HomeController {
         return "redirect:/home/roommate-listings";
     }
 
-    // University specific rooms
-//    @GetMapping("/university-apartments")
-//    public String showUniversityApartments(
-//            Principal principal,
-//            @RequestParam(required = true) String university,
-//            @RequestParam(required = false) Integer maxDistance,
-//            @RequestParam(required = false) Integer maxRent,
-//            @RequestParam(required = false, defaultValue = "0") Integer page,
-//            @RequestParam(required = false) Integer size,
-//            Model model) {
-//
-//        if (principal == null) {
-//            return "redirect:/auth/login";
-//        }
-//
-//        // Validate pagination parameters
-//        final int pageSize = paginationConfig.validatePageSize(size);
-//        final int pageNumber = (page != null && page >= 0) ? page : 0;
-//
-//        List<RoomInfo> universityRooms = roomInfoService.findRoomsByUniversityProximity(
-//                university, maxDistance);
-//
-//        // Additional filtering by rent if requested
-//        if (maxRent != null) {
-//            universityRooms = universityRooms.stream()
-//                    .filter(room -> room.getRent() <= maxRent)
-//                    .collect(Collectors.toList());
-//        }
-//
-//        // Get total count
-//        int totalCount = universityRooms.size();
-//
-//        // Apply pagination
-//        List<RoomInfo> paginatedRooms = applyPagination(universityRooms, pageNumber, pageSize);
-//
-//        // Calculate total pages
-//        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-//
-//        model.addAttribute("rooms", paginatedRooms);
-//        model.addAttribute("universityFilter", university);
-//        model.addAttribute("maxDistanceFilter", maxDistance);
-//        model.addAttribute("maxRentFilter", maxRent);
-//        model.addAttribute("totalCount", totalCount);
-//        model.addAttribute("currentPage", pageNumber);
-//        model.addAttribute("pageSize", pageSize);
-//        model.addAttribute("totalPages", totalPages);
-//        model.addAttribute("hasMore", pageNumber + 1 < totalPages);
-//
-//        return "university-apartments";
-//    }
+    @GetMapping("/boom")
+    public String boom() {
+        throw new RuntimeException("💥");
+    }
 }

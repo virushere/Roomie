@@ -27,7 +27,7 @@ public class UserPreferencesDAOImpl implements UserPreferencesDAO {
 
     @Override
     public UserPreferences save(UserPreferences preferences) {
-        getCurrentSession().saveOrUpdate(preferences); // merge
+        getCurrentSession().merge(preferences);
         return preferences;
     }
 
@@ -63,7 +63,7 @@ public class UserPreferencesDAOImpl implements UserPreferencesDAO {
     public void deleteById(Long id) {
         UserPreferences preferences = getCurrentSession().get(UserPreferences.class, id);
         if (preferences != null) {
-            getCurrentSession().delete(preferences);
+            getCurrentSession().remove(preferences);
         }
     }
 

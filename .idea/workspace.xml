@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ef45d74b-98f0-41a9-bdd5-7744004329d8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/config/JpaConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/config/JpaConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/controllers/CustomErrorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/controllers/CustomErrorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/controllers/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/controllers/HomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/dao/impl/RoomInfoDAOImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/dao/impl/RoomInfoDAOImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/dao/impl/UserDAOImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/dao/impl/UserDAOImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/dao/impl/UserPreferencesDAOImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/dao/impl/UserPreferencesDAOImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/CustomUserDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/CustomUserDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/JwtRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/JwtRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/JwtResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/JwtResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/RoomInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/RoomInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/UserEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/UserPreferences.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/models/UserPreferences.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/repositories/MessageRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/repositories/RoomInfoRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/repositories/UserPreferencesRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/repositories/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/security/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/security/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/security/JwtHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/security/JwtHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/services/RoomInfoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/services/RoomInfoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/roomatefinder/demo/services/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/webapp/WEB-INF/views/apartment-listings.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/webapp/WEB-INF/views/apartment-listings.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/webapp/WEB-INF/views/error.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/webapp/WEB-INF/views/error.jsp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2wHjRkT4NM7dLW57FLqflop2ycI" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/yashvyas/Desktop/Roomie"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ef45d74b-98f0-41a9-bdd5-7744004329d8" name="Changes" comment="" />
+      <created>1745705387038</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745705387038</updated>
+    </task>
+    <servers />
+  </component>
+</project>

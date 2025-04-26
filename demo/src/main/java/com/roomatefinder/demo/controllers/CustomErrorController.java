@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class CustomErrorController implements ErrorController {
+
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Model model) {
-        Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-        if (status != null) {
-            model.addAttribute("status", status.toString());
+        Object statusObj = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+        if (statusObj != null) {
+            Integer statusCode = Integer.valueOf(statusObj.toString());
+            model.addAttribute("status", statusCode);
         }
-        return "error"; // Maps to error.jsp
+        return "error";
     }
 }
+
 

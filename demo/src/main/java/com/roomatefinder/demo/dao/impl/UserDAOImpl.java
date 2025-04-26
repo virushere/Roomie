@@ -27,7 +27,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public UserEntity save(UserEntity user) {
-        getCurrentSession().saveOrUpdate(user);
+        getCurrentSession().merge(user);
         return user;
     }
 
@@ -78,7 +78,7 @@ public class UserDAOImpl implements UserDAO {
     public void deleteById(String id) {
         UserEntity user = getCurrentSession().get(UserEntity.class, id);
         if (user != null) {
-            getCurrentSession().delete(user);
+            getCurrentSession().remove(user);
         }
     }
 

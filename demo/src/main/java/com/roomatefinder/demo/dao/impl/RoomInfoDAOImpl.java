@@ -378,16 +378,7 @@ public class RoomInfoDAOImpl implements RoomInfoDAO {
     @Override
     public List<RoomInfo> findByLocationAndPriceRange(String location, Double minPrice, Double maxPrice) {
         try (Session session = sessionFactory.openSession()) {
-            StringBuilder hql = new StringBuilder("FROM RoomInfo WHERE 1=1");
-            if (location != null && !location.trim().isEmpty()) {
-                hql.append(" AND (LOWER(city) LIKE LOWER(:location) OR LOWER(state) LIKE LOWER(:location) OR LOWER(address) LIKE LOWER(:location))");
-            }
-            if (minPrice != null) {
-                hql.append(" AND rent >= :minPrice");
-            }
-            if (maxPrice != null) {
-                hql.append(" AND rent <= :maxPrice");
-            }
+            StringBuilder hql = getHql(location, minPrice, maxPrice);
             Query<RoomInfo> query = session.createQuery(hql.toString(), RoomInfo.class);
             if (location != null && !location.trim().isEmpty()) {
                 query.setParameter("location", "%" + location + "%");
@@ -406,5 +397,19 @@ public class RoomInfoDAOImpl implements RoomInfoDAO {
             log.error("Error finding rooms by location and price range", e);
             throw e;
         }
+    }
+
+    private static StringBuilder getHql(String location, Double minPrice, Double maxPrice) {
+        StringBuilder hql = new StringBuilder("FROM RoomInfo WHERE 1=1");
+        if (location != null && !location.trim().isEmpty()) {
+            hql.append(" AND (LOWER(city) LIKE LOWER(:location) OR LOWER(state) LIKE LOWER(:location) OR LOWER(address) LIKE LOWER(:location))");
+        }
+        if (minPrice != null) {
+            hql.append(" AND rent >= :minPrice");
+        }
+        if (maxPrice != null) {
+            hql.append(" AND rent <= :maxPrice");
+        }
+        return hql;
     }
 }

@@ -72,12 +72,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String token = extractJwtToken(request);
             if (token == null) {
-                sendError(response, "Authorization header missing", HttpStatus.UNAUTHORIZED);
+                sendError(response, "Authorization header missing");
                 return;
             }
 
             if (tokenBlacklistService.isTokenBlacklisted(token)) {
-                sendError(response, "Token revoked", HttpStatus.UNAUTHORIZED);
+                sendError(response, "Token revoked");
                 return;
             }
 
@@ -127,10 +127,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private void sendError(HttpServletResponse response, String message, HttpStatus status)
+    private void sendError(HttpServletResponse response, String message)
             throws IOException {
         logger.error("JWT Error: {}", message);
-        response.setStatus(status.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.getWriter().write(message);
         response.getWriter().flush();
     }

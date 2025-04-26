@@ -24,8 +24,8 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public UserEntity saveUser(UserEntity user) {
-        return userDAO.save(user);
+    public void saveUser(UserEntity user) {
+        userDAO.save(user);
     }
 
     public UserEntity updateUser(UserEntity user) {

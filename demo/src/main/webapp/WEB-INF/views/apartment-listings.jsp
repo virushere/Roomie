@@ -382,17 +382,17 @@
                     <c:if test="${not empty rooms}">
                         <p class="mb-0 text-muted">Found ${totalCount} listings</p>
                     </c:if>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Sort By
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="sortDropdown">
-                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="applySorting('priceAsc')">Price: Low to High</a></li>
-                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="applySorting('priceDesc')">Price: High to Low</a></li>
-                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="applySorting('bedsDesc')">Most Bedrooms</a></li>
-                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="applySorting('dateAsc')">Available Soonest</a></li>
-                        </ul>
-                    </div>
+                    <!--<div class="dropdown">-->
+                    <!--    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">-->
+                    <!--        Sort By-->
+                    <!--    </button>-->
+                    <!--    <ul class="dropdown-menu" aria-labelledby="sortDropdown">-->
+                    <!--        <li><a class="dropdown-item" href="javascript:void(0)" onclick="applySorting('priceAsc')">Price: Low to High</a></li>-->
+                    <!--        <li><a class="dropdown-item" href="javascript:void(0)" onclick="applySorting('priceDesc')">Price: High to Low</a></li>-->
+                    <!--        <li><a class="dropdown-item" href="javascript:void(0)" onclick="applySorting('bedsDesc')">Most Bedrooms</a></li>-->
+                    <!--        <li><a class="dropdown-item" href="javascript:void(0)" onclick="applySorting('dateAsc')">Available Soonest</a></li>-->
+                    <!--    </ul>-->
+                    <!--</div>-->
                 </div>
 
                 <div class="row" id="apartments-container">
